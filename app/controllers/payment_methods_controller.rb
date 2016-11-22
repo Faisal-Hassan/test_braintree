@@ -13,7 +13,7 @@ class PaymentMethodsController < ApplicationController
   def confirmation
     result = Braintree::TransparentRedirect.confirm(request.query_string)
     if result.success?
-      # what do we do here?
+      current_user.update_attribute(:credit_card_token, result.credit_card.token)
     else
       logger.error "Could not create credit card for email #{current_user.email}, because of #{result.errors.inspect}"
     end
